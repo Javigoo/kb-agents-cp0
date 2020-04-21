@@ -9,7 +9,7 @@ import org.sat4j.reader.*;
 
 
 /**
-  The class for the main program of the Barcenas World
+  The class for the main program of the Treasure World
 
 **/
 public class TreasureWorld {
@@ -33,18 +33,21 @@ public static void runStepsSequence( int wDim, int tX, int tY,
                                     int numSteps, String fileSteps, String filePirates ) throws
                                IOException,  ContradictionException, TimeoutException {
   // Make instances of TreasureFinder agent and environment object classes
-   TreasureFinder TAgent  ;
-   TreasureWorldEnv EnvAgent  ;
+  TreasureFinder TAgent = new TreasureFinder(wDim) ;
+  TreasureWorldEnv EnvAgent = new TreasureWorldEnv(wDim, tX, tY) ;
 
 
-   // Set environment object, and load list of pirate positions
- 
+  // Set environment object, and load list of pirate positions 
+  EnvAgent.loadPiratesLocations(filePirates);   // <----- Tambien se lo podemos pasar en el constructor.
 
-   // load list of steps into the Finder Agent
+  // load list of steps into the Finder Agent
+  TAgent.loadListOfSteps(numSteps, fileSteps);
     
-    
-   // Execute sequence of steps with the Agent
-
+  // Execute sequence of steps with the Agent
+  while (true){
+    TAgent.runNextStep();
+  }
+  
 }
 
 /**

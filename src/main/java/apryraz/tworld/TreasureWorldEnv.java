@@ -32,6 +32,13 @@ public class TreasureWorldEnv {
     loadPiratesLocations(piratesFile);
   }
 
+  public TreasureWorldEnv( int dim, int tx, int ty) {
+
+    TreasureX = tx;
+    TreasureY = ty;
+    WorldDim = dim;
+  }
+
 /**
 *   Load the list of pirates locations
 *  
