@@ -288,6 +288,11 @@ public class TreasureFinder  {
         return ans;
     }
 
+    private IVec<IVecInt> getSensorClauses(int x, int y, String detects){
+
+        return clauses;
+    }
+
 
     /**
     *   Process the answer obtained for the query "Detects at (x,y)?"
@@ -306,9 +311,11 @@ public class TreasureFinder  {
 
          // Call your function/functions to add the evidence clauses
          // to Gamma to then be able to infer new NOT possible positions
-         
+        
+        clauses = getSensorClauses( x, y, detects);
 
          // CALL your functions HERE
+        solver.addAllClauses(clauses);
     }
 
 
@@ -329,6 +336,11 @@ public class TreasureFinder  {
         return ans;
     }
 
+    private IVec<IVecInt> getPirateClauses(int y, String isup){
+
+        return clauses;
+    }
+
     public processPirateAnswer( AMessage ans )   throws
             IOException, ContradictionException,  TimeoutException
     {
@@ -339,10 +351,12 @@ public class TreasureFinder  {
 
         // Call your function/functions to add the evidence clauses
         // to Gamma to then be able to infer new NOT possible positions
-         
+        
+        clauses = getPirateClauses( y, isup);
 
          // CALL your functions HERE to update the solver object with more 
          // clauses
+         solver.addAllClauses(clauses);
    }
 
 
@@ -412,7 +426,7 @@ public class TreasureFinder  {
 
         // You must set this variable to the total number of boolean variables
         // in your formula Gamma
-        // totalNumVariables =  ??
+        totalNumVariables=6;
         solver = SolverFactory.newDefault();
         solver.setTimeout(3600);
         solver.newVar(totalNumVariables);

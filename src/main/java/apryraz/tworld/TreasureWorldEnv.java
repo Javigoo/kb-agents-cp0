@@ -6,8 +6,6 @@ import java.util.ArrayList;
 
 
 
-
-
 public class TreasureWorldEnv {
 /**
   X,Y position of Treasure and world dimension
