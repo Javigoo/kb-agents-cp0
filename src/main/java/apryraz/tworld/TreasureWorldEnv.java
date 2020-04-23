@@ -39,7 +39,7 @@ public class TreasureWorldEnv {
 
 /**
 *   Load the list of pirates locations
-*  
+*
 *    @param: name of the file that should contain a
 *            set of pirate locations in a single line.
 **/
@@ -65,11 +65,11 @@ public class TreasureWorldEnv {
        if ( msg.getComp(0).equals("moveto") ) {
            int nx = Integer.parseInt( msg.getComp(1) );
            int ny = Integer.parseInt( msg.getComp(2) );
-           
+
            if (withinLimits(nx,ny))
            {
              int pirate = isPirateInMyCell( nx,ny );
-             
+
              ans = new AMessage("movedto",msg.getComp(1),msg.getComp(2),
                                 (new Integer(pirate)).toString()  );
            }
@@ -94,7 +94,7 @@ public class TreasureWorldEnv {
 
  **/
    public int isPirateInMyCell( int x, int y ) {
-
+     return -1;
    }
 
 
@@ -111,5 +111,5 @@ public class TreasureWorldEnv {
 
     return ( x >= 1 && x <= WorldDim && y >= 1 && y <= WorldDim);
   }
- 
+
 }

@@ -118,7 +118,7 @@ public class TreasureFinderTest {
   **/
   public void testMakeSeqOfSteps( int wDim, int tX, int tY,
                                   int numSteps, String fileSteps, String fileStates,
-                                  String filePirates  ) 
+                                  String filePirates  )
        throws   IOException,  ContradictionException, TimeoutException {
       // You should make TreasureFinder and TreasureWorldEnv objects to  test.
       // Then load sequence of target states, load sequence of steps into the bAgent
@@ -131,8 +131,8 @@ public class TreasureFinderTest {
 
 
      // Set environment agent and load list of steps into the agent
-     TAgent.loadListOfSteps(  numSteps, fileSteps ) ;
-     TAgent.setEnvironment( EnvAgent );
+     //TAgent.loadListOfSteps(  numSteps, fileSteps ) ;
+     //TAgent.setEnvironment( EnvAgent );
 
      // Test here the sequence of steps and check the resulting states with the
      // ones in seqOfStates

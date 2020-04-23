@@ -73,7 +73,7 @@ public class TreasureFinder  {
 
 /**
 *    This set of variables CAN be use to mark the beginning of different sets
-*    of variables in your propositional formula (but you may have more sets of 
+*    of variables in your propositional formula (but you may have more sets of
 *    variables in your solution).
 **/
     int TreasurePastOffset;
@@ -192,7 +192,7 @@ public class TreasureFinder  {
           // Ask to move, and check whether it was successful
           // Also, record if a pirate was found at that position
           processMoveAnswer( moveToNext( ) );
-        
+
 
           // Next, use Detector sensor to discover new information
           processDetectorSensorAnswer( DetectsAt() );
@@ -200,7 +200,7 @@ public class TreasureFinder  {
           // pirate and process Answer to discover new information
           if (pirateFound == 1) {
              processPirateAnswer( IsTreasureUpOrDown() );
-          }  
+          }
 
           // Perform logical consequence questions for all the positions
           // of the Treasure World
@@ -227,7 +227,7 @@ public class TreasureFinder  {
             return moveTo(nextPosition.x, nextPosition.y);
         } else {
             System.out.println("NO MORE steps to perform at agent!");
-            return (new AMessage("NOMESSAGE","",""));
+            return (new AMessage("NOMESSAGE","","",""));
         }
     }
 
@@ -248,7 +248,7 @@ public class TreasureFinder  {
         // Tell the EnvironmentAgentID that we want  to move
         AMessage msg, ans;
 
-        msg = new AMessage("moveto", (new Integer(x)).toString(), (new Integer(y)).toString() );
+        msg = new AMessage("moveto", (new Integer(x)).toString(), (new Integer(y)).toString(), "");
         ans = EnvAgent.acceptMessage( msg );
         System.out.println("FINDER => moving to : (" + x + "," + y + ")");
 
@@ -288,10 +288,10 @@ public class TreasureFinder  {
         return ans;
     }
 
-    private IVec<IVecInt> getSensorClauses(int x, int y, String detects){
+    //private IVec<IVecInt> getSensorClauses(int x, int y, String detects){
 
-        return clauses;
-    }
+        //return clauses;
+    //}
 
 
     /**
@@ -309,13 +309,13 @@ public class TreasureFinder  {
         int y = Integer.parseInt(ans.getComp(2));
         String detects = ans.getComp(0);
 
-         // Call your function/functions to add the evidence clauses
-         // to Gamma to then be able to infer new NOT possible positions
-        
-        clauses = getSensorClauses( x, y, detects);
+        // Call your function/functions to add the evidence clauses
+        // to Gamma to then be able to infer new NOT possible positions
 
-         // CALL your functions HERE
-        solver.addAllClauses(clauses);
+        //clauses = getSensorClauses( x, y, detects);
+
+        // CALL your functions HERE
+        //solver.addAllClauses(clauses);
     }
 
 
@@ -336,12 +336,12 @@ public class TreasureFinder  {
         return ans;
     }
 
-    private IVec<IVecInt> getPirateClauses(int y, String isup){
+    //private IVec<IVecInt> getPirateClauses(int y, String isup){
 
-        return clauses;
-    }
+        //return clauses;
+    //}
 
-    public processPirateAnswer( AMessage ans )   throws
+    public void processPirateAnswer( AMessage ans )   throws
             IOException, ContradictionException,  TimeoutException
     {
 
@@ -351,17 +351,17 @@ public class TreasureFinder  {
 
         // Call your function/functions to add the evidence clauses
         // to Gamma to then be able to infer new NOT possible positions
-        
-        clauses = getPirateClauses( y, isup);
 
-         // CALL your functions HERE to update the solver object with more 
-         // clauses
-         solver.addAllClauses(clauses);
+        //clauses = getPirateClauses( y, isup);
+
+        // CALL your functions HERE to update the solver object with more
+        // clauses
+        //solver.addAllClauses(clauses);
    }
 
 
-   
-  
+
+
 
     /**
     *  This function should add all the clauses stored in the list
