@@ -8,7 +8,7 @@ public class AMessage {
   /*
   *  Array of String objects, that represent the different fields of each message
   *  So far, we assume a fixed pattern, with always three fields in any message:
-  *  field0:  message type: moveto, movedto, notmovedto, detects at, yes/no ...
+  *  field0:  message type: moveto,,"","" movedto, notmovedto, detects at, yes/no ...
   *  field1:  first parameter of message
   *  field2:  second parameter of message
   */

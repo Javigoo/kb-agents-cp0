@@ -1,5 +1,3 @@
-
-
 package apryraz.tworld;
 
 import java.util.ArrayList;
@@ -44,8 +42,8 @@ public class TreasureWorldEnv {
 *            set of pirate locations in a single line.
 **/
   public void loadPiratesLocations( String piratesFile ) {
-
-
+    System.out.println("\nDEBUG: ");
+    System.out.println(piratesFile);
   }
 
 
@@ -60,8 +58,8 @@ public class TreasureWorldEnv {
 **/
    public AMessage acceptMessage( AMessage msg ) {
        AMessage ans = new AMessage("voidmsg", "", "", "" );
+       msg.showMessage();
 
-         msg.showMessage();
        if ( msg.getComp(0).equals("moveto") ) {
            int nx = Integer.parseInt( msg.getComp(1) );
            int ny = Integer.parseInt( msg.getComp(2) );
@@ -77,28 +75,66 @@ public class TreasureWorldEnv {
              ans = new AMessage("notmovedto",msg.getComp(1),msg.getComp(2), "" );
 
        } else {
-             // YOU MUST ANSWER ALSO TO THE OTHER MESSAGE TYPES:
-             //   ( "detectsat", "x" , "y", "" )
-             //   ( "treasureup", "x", "y", "" )
-         }
-       return ans;
 
+          // YOU MUST ANSWER ALSO TO THE OTHER MESSAGE TYPES:
+          //   ( "detectsat", "x" , "y", "" )
+          //   ( "treasureup", "x", "y", "" )
+
+          if (msg.getComp(0).equals("detectsat"))
+          {
+            int nx = Integer.parseInt(msg.getComp(1));
+            int ny = Integer.parseInt(msg.getComp(2));
+            String sensorReading = returnSensorReading(nx, ny);
+            ans = new AMessage(sensorReading, msg.getComp(1), msg.getComp(2), "");
+
+          }
+          else if (msg.getComp(0).equals("treasureup"))
+          {
+            int nx = Integer.parseInt(msg.getComp(1));
+            int ny = Integer.parseInt(msg.getComp(2));
+            //String barcenasWay = returnBarcenasDirection(nx, ny);
+            ans = new AMessage("answerOfPirate", msg.getComp(1), msg.getComp(2), "");
+
+          }
+      }
+      return ans;
    }
 
- /**  Check if there is a pirate in position (x,y)
+   /**  Return metal sensor reading
+   *
+   * @param x  x coordinate of agent position
+   * @param y  y coordinate of agent position
+   *
+   * @return 1  if the treasure is located in the same tile where the agent is now
+   * @return 2  if the treasure is in some tile in the square of length 3 centered around the agent
+   * @return 3  if the treasure is in some tile in the square of length 5 centered around the agent
+   * @return 0  if the treasure is not in any of the locations indicated by the preavious readings 1, 2 and 3
+   **/
+  private String returnSensorReading(int x, int y) {
+      if (x == TreasureX && y == TreasureY) {
+  			return "1";
+  		} else if ( (TreasureX-1 <= x && x <= TreasureX+1) && (TreasureY-1 <= y && y <= TreasureY+1) ) {
+  			return "2";
+  		} else if ( (TreasureX-2 <= x && x <= TreasureX+2) && (TreasureY-2 <= y && y <= TreasureY+2) ) {
+  			return "3";
+  		} else {
+  			return "0";
+  		}
+  }
+
+  /**  Check if there is a pirate in position (x,y)
   *
   * @param x  x coordinate of agent position
   * @param y  y coordinate of agent position
   *
   * @return 1  if (x,y) contains a pirate, 0 otherwise
-
- **/
+  **/
    public int isPirateInMyCell( int x, int y ) {
-     return -1;
+     return 0;
    }
 
 
- /**
+  /**
   * Check if position x,y is within the limits of the
   * WorldDim x WorldDim   world
   *

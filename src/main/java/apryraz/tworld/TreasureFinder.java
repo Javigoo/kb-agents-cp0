@@ -245,7 +245,7 @@ public class TreasureFinder  {
     **/
     public AMessage moveTo( int x, int y )
     {
-        // Tell the EnvironmentAgentID that we want  to move
+        // Tell the EnvironmentAgentID that we want to move
         AMessage msg, ans;
 
         msg = new AMessage("moveto", (new Integer(x)).toString(), (new Integer(y)).toString(), "");
@@ -288,12 +288,6 @@ public class TreasureFinder  {
         return ans;
     }
 
-    //private IVec<IVecInt> getSensorClauses(int x, int y, String detects){
-
-        //return clauses;
-    //}
-
-
     /**
     *   Process the answer obtained for the query "Detects at (x,y)?"
     *   by adding the appropriate evidence clause to the formula
@@ -304,20 +298,60 @@ public class TreasureFinder  {
     public void processDetectorSensorAnswer( AMessage ans ) throws
             IOException, ContradictionException,  TimeoutException
     {
-
         int x = Integer.parseInt(ans.getComp(1));
         int y = Integer.parseInt(ans.getComp(2));
         String detects = ans.getComp(0);
 
+        System.out.println("\nDEBUG: ");
+        System.out.println(detects);
         // Call your function/functions to add the evidence clauses
         // to Gamma to then be able to infer new NOT possible positions
 
-        //clauses = getSensorClauses( x, y, detects);
-
         // CALL your functions HERE
-        //solver.addAllClauses(clauses);
+
+        getDetectorSensorClauses(x, y, detects);
+        //inference()
+        tfstate.printState();
     }
 
+    /**
+    * Adds the clauses obtained with the metal sensor information to the formula Gamma.
+    *
+    * @param x        x coordinate of position.
+    * @param y        y coordinate of position.
+    * @param reading  metal sensor can give four different readings: 0, 1, 2 or 3.
+    * @throws ContradictionException if inserting contradictory clauses in formula.
+    **/
+    private void getDetectorSensorClauses(int x, int y, String reading) throws ContradictionException {
+      System.out.println("Metal sensor returned: " + reading);
+      System.out.println("Inserting evidence clause");
+      switch (reading) {
+        case "1":
+          //addCoordToFormula(x, y, +1, soundAboveOffset);
+          //addCoordToFormula(x, y, +1, soundRightOffset);
+          break;
+
+        case "2":
+          //addCoordToFormula(x, y, +1, soundAboveOffset);
+          //addCoordToFormula(x, y, +1, soundLeftOffset);
+          break;
+
+        case "3":
+          //addCoordToFormula(x, y, +1, soundBelowOffset);
+          //addCoordToFormula(x, y, +1, soundRightOffset);
+          break;
+
+        case "0":
+          //addCoordToFormula(x, y, +1, soundBelowOffset);
+          //addCoordToFormula(x, y, +1, soundLeftOffset);
+          break;
+
+        default:
+          System.out.println("FINDER => Error with metal sensor reading");
+          //addBarcenasHereClauses(x, y);
+          break;
+      }
+    }
 
     /**
      *   Send to the pirate (using the environment object) the question:
@@ -327,7 +361,7 @@ public class TreasureFinder  {
     **/
     public AMessage IsTreasureUpOrDown()
     {
-       AMessage msg, ans;
+        AMessage msg, ans;
 
         msg = new AMessage( "treasureup", (new Integer(agentX)).toString(),
                                          (new Integer(agentY)).toString(), "" );
@@ -344,7 +378,6 @@ public class TreasureFinder  {
     public void processPirateAnswer( AMessage ans )   throws
             IOException, ContradictionException,  TimeoutException
     {
-
         int y = Integer.parseInt(ans.getComp(2));
         String isup = ans.getComp(0);
         // isup should be either "yes" (is up of agent position), or "no"
@@ -372,7 +405,6 @@ public class TreasureFinder  {
     public void addLastFutureClausesToPastClauses() throws  IOException,
             ContradictionException, TimeoutException
     {
-
 
     }
 
