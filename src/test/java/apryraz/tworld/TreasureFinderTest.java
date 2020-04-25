@@ -127,7 +127,7 @@ public class TreasureFinderTest {
       // and then test the sequence calling testMakeSimpleStep once for each step.
      TreasureFinder TAgent = new TreasureFinder(wDim);
      // load information about the World into the EnvAgent
-     TreasureWorldEnv EnvAgent = new TreasureWorldEnv(wDim, tX, tY);
+     TreasureWorldEnv EnvAgent = new TreasureWorldEnv(wDim, tX, tY, filePirates);
      // Load list of states
      ArrayList<TFState> seqOfStates = loadListOfTargetStates(wDim, numSteps, fileStates);
 

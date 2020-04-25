@@ -25,7 +25,7 @@ public class TreasureWorldEnv {
   /**
     * The list of pirates
   **/
-      ArrayList<Position> listOfPirates;
+  ArrayList<Position> listOfPirates;
 
 /**
 *  Class constructor
@@ -51,22 +51,20 @@ public class TreasureWorldEnv {
   }
 
 
-/**
-*   Load the list of pirates locations
-*
-*    @param: name of the file that should contain a
-*            set of pirate locations in a single line.
-**/
+  /**
+  *   Load the list of pirates locations
+  *
+  *    @param: name of the file that should contain a
+  *            set of pirate locations in a single line.
+  **/
   public void loadPiratesLocations( String piratesFile ) {
-    System.out.println("\nDEBUG PIRATES LOADING: \n");
-    System.out.println(piratesFile);
-
     String[] piratesList;
     String pirate = ""; // Prepare a list of movements to try with the FINDER Agent
     try {
         BufferedReader br = new BufferedReader(new FileReader(piratesFile));
         System.out.println("PIRATES FILE OPENED ...");
         pirate = br.readLine();
+
         br.close();
     } catch (FileNotFoundException ex) {
         System.out.println("MSG.   => Pirates file not found");
@@ -81,6 +79,7 @@ public class TreasureWorldEnv {
         String[] coords = piratesList[i].split(",");
         listOfPirates.add(new Position(Integer.parseInt(coords[0]), Integer.parseInt(coords[1])));
     }
+
   }
 
 
@@ -168,6 +167,11 @@ public class TreasureWorldEnv {
   * @return 1  if (x,y) contains a pirate, 0 otherwise
   **/
    public int isPirateInMyCell( int x, int y ) {
+     //listOfPirates = new ArrayList<Position>();
+     //listOfPirates.add(new Position(2,2));
+     System.out.println("\nisPirateInMyCell: \n");
+     System.out.println(listOfPirates.get(0).x +","+listOfPirates.get(0).y );
+
      return 0;
    }
 

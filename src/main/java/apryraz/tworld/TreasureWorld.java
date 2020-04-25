@@ -18,7 +18,7 @@ public class TreasureWorld {
 
 /**
    This function should execute the sequence of steps stored in the file fileSteps,
-   but only up to numSteps steps. Each step must be executed with function 
+   but only up to numSteps steps. Each step must be executed with function
    runNextStep() of the BarcenasFinder agent.
 
    @param wDim the dimension of world
@@ -37,17 +37,17 @@ public static void runStepsSequence( int wDim, int tX, int tY,
   TreasureWorldEnv EnvAgent = new TreasureWorldEnv(wDim, tX, tY) ;
 
 
-  // Set environment object, and load list of pirate positions 
+  // Set environment object, and load list of pirate positions
   EnvAgent.loadPiratesLocations(filePirates);   // <----- Tambien se lo podemos pasar en el constructor.
 
   // load list of steps into the Finder Agent
   TAgent.loadListOfSteps(numSteps, fileSteps);
-    
+
   // Execute sequence of steps with the Agent
   while (true){
     TAgent.runNextStep();
   }
-  
+
 }
 
 /**
