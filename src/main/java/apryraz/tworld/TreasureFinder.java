@@ -306,6 +306,7 @@ public class TreasureFinder  {
         // CALL your functions HERE
 
         getDetectorSensorClauses(x, y, detects);
+
         //inference()
         tfstate.printState();
     }
@@ -339,7 +340,6 @@ public class TreasureFinder  {
 
         default:
           System.out.println("FINDER => Error with metal sensor reading");
-          //addBarcenasHereClauses(x, y);
           break;
       }
     }
@@ -437,9 +437,6 @@ public class TreasureFinder  {
    }
 
 
-
-
-
     /**
     *  This function should add all the clauses stored in the list
     *  futureToPast to the formula stored in solver.
@@ -449,7 +446,11 @@ public class TreasureFinder  {
     public void addLastFutureClausesToPastClauses() throws  IOException,
             ContradictionException, TimeoutException
     {
-
+      if (futureToPast != null) {
+			     for (VecInt vecInt : futureToPast) {
+				         solver.addClause(vecInt);
+			     }
+		  }
     }
 
     /**
