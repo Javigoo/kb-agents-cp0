@@ -64,7 +64,7 @@ public static void main ( String[] args) throws ParseFormatException,
 
   // Here I run a concrete example, but you should read parameters from
   // the command line, as decribed above.
-  runStepsSequence(  4, 3, 3, 5, "tests/steps1.txt", "tests/pirates1.txt"  );
+  runStepsSequence( 4, 3, 3, 5, "tests/steps1.txt", "tests/pirates1.txt"  );
 }
 
 }

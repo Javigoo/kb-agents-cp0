@@ -22,8 +22,6 @@ import org.sat4j.minisat.*;
 import org.sat4j.reader.*;
 
 
-
-
 /**
 *  This agent performs a sequence of movements, and after each
 *  movement it "senses" from the evironment the resulting position

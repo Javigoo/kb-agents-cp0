@@ -128,8 +128,8 @@ public class TreasureWorldEnv {
           {
             int nx = Integer.parseInt(msg.getComp(1));
             int ny = Integer.parseInt(msg.getComp(2));
-            //String pirateAnswer = returnPirateAnswer(nx, ny);
-            ans = new AMessage("answerOfPirate", msg.getComp(1), msg.getComp(2), "");
+            String pirateAnswer = returnPirateAnswer(nx, ny);
+            ans = new AMessage(pirateAnswer, msg.getComp(1), msg.getComp(2), "");
 
           }
       }
@@ -156,6 +156,22 @@ public class TreasureWorldEnv {
   			return "3";
   		} else {
   			return "0";
+  		}
+  }
+
+  /**  Return pirate answer
+  *
+  * @param x  x coordinate of agent position
+  * @param y  y coordinate of agent position
+  *
+  * @return yes  if the treasure is up of agent position
+  * @return no  if the treasure is down of agent position
+  **/
+  private String returnPirateAnswer(int x, int y) {
+      if (TreasureY > y) {
+  			return "yes";
+  		} else {
+  			return "no";
   		}
   }
 
