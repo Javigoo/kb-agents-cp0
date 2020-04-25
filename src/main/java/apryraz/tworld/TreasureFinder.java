@@ -323,23 +323,18 @@ public class TreasureFinder  {
       System.out.println("Inserting evidence clause");
       switch (reading) {
         case "1":
-          //addCoordToFormula(x, y, +1, soundAboveOffset);
-          //addCoordToFormula(x, y, +1, soundRightOffset);
+          getSensorClauses1();
           break;
 
         case "2":
-          //addCoordToFormula(x, y, +1, soundAboveOffset);
-          //addCoordToFormula(x, y, +1, soundLeftOffset);
+          getSensorClauses2();
           break;
 
         case "3":
-          //addCoordToFormula(x, y, +1, soundBelowOffset);
-          //addCoordToFormula(x, y, +1, soundRightOffset);
+          getSensorClauses3();
           break;
 
         case "0":
-          //addCoordToFormula(x, y, +1, soundBelowOffset);
-          //addCoordToFormula(x, y, +1, soundLeftOffset);
           break;
 
         default:
@@ -347,6 +342,63 @@ public class TreasureFinder  {
           //addBarcenasHereClauses(x, y);
           break;
       }
+    }
+
+
+    private void getSensorClauses1() throws ContradictionException{
+        VecInt clause = new VecInt();
+        clause.insertFirst(coordToLineal(agentX, agentY, TreasureFutureOffset));// VARIABLE PARA INDICAR EL TESORO ??.
+        solver.addClause(clause);
+    }
+
+    private void getSensorClauses2() throws ContradictionException {
+        VecInt clause = new VecInt();
+        for (int x=0; x<WorldDim; x++){
+            for (int y=0; y<WorldDim; y++){
+                if (   (x==agentX+1 && y==agentY  )
+                    || (x==agentX   && y==agentY+1)
+                    || (x==agentX+1 && y==agentY+1)
+                    || (x==agentX-1 && y==agentY+1)
+                    || (x==agentX-1 && y==agentY  )
+                    || (x==agentX-1 && y==agentY-1)
+                    || (x==agentX   && y==agentY-1)
+                    || (x==agentX+1 && y==agentY-1)){
+                    // Es el marco.
+                }else{
+                    clause.insertFirst(-coordToLineal(x, y, TreasureFutureOffset));
+                    solver.addClause(clause);
+                }
+            }
+        }
+    }
+
+    private void getSensorClauses3() throws ContradictionException {
+        VecInt clause = new VecInt();
+        for (int x=0; x<WorldDim; x++){
+            for (int y=0; y<WorldDim; y++){
+                if (   (x==agentX   && y==agentY+2)
+                    || (x==agentX+1 && y==agentY+2)
+                    || (x==agentX+2 && y==agentY+2)
+                    || (x==agentX+2 && y==agentY+1)
+                    || (x==agentX+2 && y==agentY  )
+                    || (x==agentX+2 && y==agentY-1)
+                    || (x==agentX+2 && y==agentY-2)
+                    || (x==agentX+1 && y==agentY-2)
+                    || (x==agentX   && y==agentY-2)
+                    || (x==agentX-1 && y==agentY-2)
+                    || (x==agentX-2 && y==agentY-2)
+                    || (x==agentX-2 && y==agentY-1)
+                    || (x==agentX-2 && y==agentY  )
+                    || (x==agentX-2 && y==agentY+1)
+                    || (x==agentX-2 && y==agentY+2)
+                    || (x==agentX-1 && y==agentY+2)){
+                    // Es el marco.
+                }else{
+                    clause.insertFirst(-coordToLineal(x, y, TreasureFutureOffset));
+                    solver.addClause(clause);
+                }
+            }
+        }
     }
 
     /**
@@ -366,10 +418,6 @@ public class TreasureFinder  {
         return ans;
     }
 
-    //private IVec<IVecInt> getPirateClauses(int y, String isup){
-
-        //return clauses;
-    //}
 
     public void processPirateAnswer( AMessage ans )   throws
             IOException, ContradictionException,  TimeoutException
