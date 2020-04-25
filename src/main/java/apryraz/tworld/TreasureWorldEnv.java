@@ -167,11 +167,11 @@ public class TreasureWorldEnv {
   * @return 1  if (x,y) contains a pirate, 0 otherwise
   **/
    public int isPirateInMyCell( int x, int y ) {
-     //listOfPirates = new ArrayList<Position>();
-     //listOfPirates.add(new Position(2,2));
-     System.out.println("\nisPirateInMyCell: \n");
-     System.out.println(listOfPirates.get(0).x +","+listOfPirates.get(0).y );
-
+     for (int i = 0 ; i < listOfPirates.size() ; i++ ) {
+       if (x == listOfPirates.get(0).x && y == listOfPirates.get(0).y) {
+         return 1;
+       }
+     }
      return 0;
    }
 
