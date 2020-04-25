@@ -424,6 +424,7 @@ public class TreasureFinder  {
     {
         int y = Integer.parseInt(ans.getComp(2));
         String isup = ans.getComp(0);
+        System.out.println("\nProcessPirateAnswer\n");
         // isup should be either "yes" (is up of agent position), or "no"
 
         // Call your function/functions to add the evidence clauses
@@ -468,6 +469,7 @@ public class TreasureFinder  {
     public void  performInferenceQuestions() throws  IOException,
             ContradictionException, TimeoutException
     {
+      /**
        // EXAMPLE code to check this for position (2,3):
        // Get variable number for position 2,3 in past variables
         int linealIndex = coordToLineal(2, 3, TreasureFutureOffset);
@@ -487,7 +489,29 @@ public class TreasureFinder  {
               futureToPast.add(concPast);
               tfstate.set( 2 , 3 , "X" );
         }
+        **/
+        futureToPast = new ArrayList<>();
+    		for (int i = 1; i <= WorldDim; i++) {
+    			for (int j = 1; j <= WorldDim; j++) {
+    				// Get variable number for position i,j in past variables
+    				int linealIndex = coordToLineal(i, j, TreasureFutureOffset);
+    				// Get the same variable, but in the past subset
+    				int linealIndexPast = coordToLineal(i, j, TreasurePastOffset);
 
+    				VecInt variablePositive = new VecInt();
+    				variablePositive.insertFirst(linealIndex);
+
+    				// Check if Gamma + variablePositive is unsatisfiable:
+    				if (!(solver.isSatisfiable(variablePositive))) {
+    					// Add conclusion to list, but rewritten with respect to "past" variables
+    					VecInt concPast = new VecInt();
+    					concPast.insertFirst(-(linealIndexPast));
+
+    					futureToPast.add(concPast);
+    					tfstate.set(i, j, "X");
+    				}
+    			}
+    		}
     }
 
     /**
