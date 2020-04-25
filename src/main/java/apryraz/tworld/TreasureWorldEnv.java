@@ -2,7 +2,18 @@ package apryraz.tworld;
 
 import java.util.ArrayList;
 
-
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import static java.lang.System.exit;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Iterator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.sat4j.core.VecInt;
 
 public class TreasureWorldEnv {
 /**
@@ -11,6 +22,10 @@ public class TreasureWorldEnv {
 **/
   int TreasureX, TreasureY, WorldDim;
 
+  /**
+    * The list of pirates
+  **/
+      ArrayList<Position> listOfPirates;
 
 /**
 *  Class constructor
@@ -35,6 +50,7 @@ public class TreasureWorldEnv {
     WorldDim = dim;
   }
 
+
 /**
 *   Load the list of pirates locations
 *
@@ -42,8 +58,29 @@ public class TreasureWorldEnv {
 *            set of pirate locations in a single line.
 **/
   public void loadPiratesLocations( String piratesFile ) {
-    System.out.println("\nDEBUG: ");
+    System.out.println("\nDEBUG PIRATES LOADING: \n");
     System.out.println(piratesFile);
+
+    String[] piratesList;
+    String pirate = ""; // Prepare a list of movements to try with the FINDER Agent
+    try {
+        BufferedReader br = new BufferedReader(new FileReader(piratesFile));
+        System.out.println("PIRATES FILE OPENED ...");
+        pirate = br.readLine();
+        br.close();
+    } catch (FileNotFoundException ex) {
+        System.out.println("MSG.   => Pirates file not found");
+        exit(1);
+    } catch (IOException ex) {
+        Logger.getLogger(TreasureWorldEnv.class.getName()).log(Level.SEVERE, null, ex);
+        exit(2);
+    }
+    piratesList = pirate.split(" ");
+    listOfPirates = new ArrayList<Position>();
+    for (int i = 0 ; i < piratesList.length ; i++ ) {
+        String[] coords = piratesList[i].split(",");
+        listOfPirates.add(new Position(Integer.parseInt(coords[0]), Integer.parseInt(coords[1])));
+    }
   }
 
 
@@ -92,7 +129,7 @@ public class TreasureWorldEnv {
           {
             int nx = Integer.parseInt(msg.getComp(1));
             int ny = Integer.parseInt(msg.getComp(2));
-            //String barcenasWay = returnBarcenasDirection(nx, ny);
+            //String pirateAnswer = returnPirateAnswer(nx, ny);
             ans = new AMessage("answerOfPirate", msg.getComp(1), msg.getComp(2), "");
 
           }
@@ -100,16 +137,17 @@ public class TreasureWorldEnv {
       return ans;
    }
 
-   /**  Return metal sensor reading
-   *
-   * @param x  x coordinate of agent position
-   * @param y  y coordinate of agent position
-   *
-   * @return 1  if the treasure is located in the same tile where the agent is now
-   * @return 2  if the treasure is in some tile in the square of length 3 centered around the agent
-   * @return 3  if the treasure is in some tile in the square of length 5 centered around the agent
-   * @return 0  if the treasure is not in any of the locations indicated by the preavious readings 1, 2 and 3
-   **/
+
+  /**  Return metal sensor reading
+  *
+  * @param x  x coordinate of agent position
+  * @param y  y coordinate of agent position
+  *
+  * @return 1  if the treasure is located in the same tile where the agent is now
+  * @return 2  if the treasure is in some tile in the square of length 3 centered around the agent
+  * @return 3  if the treasure is in some tile in the square of length 5 centered around the agent
+  * @return 0  if the treasure is not in any of the locations indicated by the preavious readings 1, 2 and 3
+  **/
   private String returnSensorReading(int x, int y) {
       if (x == TreasureX && y == TreasureY) {
   			return "1";
