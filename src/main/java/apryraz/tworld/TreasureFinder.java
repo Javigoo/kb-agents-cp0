@@ -524,7 +524,8 @@ public class TreasureFinder  {
     		    }
         }
         if(posibles==1){
-            tfstate.set(ty,tx, "O");
+            System.out.println("Treasure: -> ("+tx+","+ty+")");
+            tfstate.set(ty,tx,"?");
         }
     }
 
