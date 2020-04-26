@@ -185,7 +185,7 @@ public class TreasureFinder  {
           pirateFound = 0;
           // Add the conclusions obtained in the previous step
           // but as clauses that use the "past" variables
-          //addLastFutureClausesToPastClauses();
+          addLastFutureClausesToPastClauses();
 
           // Ask to move, and check whether it was successful
           // Also, record if a pirate was found at that position
@@ -342,13 +342,20 @@ public class TreasureFinder  {
 
 
     private void getSensorClauses1() throws ContradictionException{
-        VecInt clause = new VecInt();
-        // Deberiamos descartar el resto de posiciones.
-        int linealIndex = coordToLineal(agentX, agentY, TreasureFutureOffset);
-        System.out.println("Adding: " + linealIndex + " literal to formula -> ("+agentX+","+agentY+")");
+        for (int x=1; x<=WorldDim; x++){
+            for (int y=1; y<=WorldDim; y++){
+                VecInt clause = new VecInt();
+                if (x==agentX && y==agentY){
 
-        clause.insertFirst(linealIndex);
-        solver.addClause(clause);
+                }else{
+                    int linealIndex = -(coordToLineal(x, y, TreasureFutureOffset));
+                    System.out.println("Adding: " + linealIndex + " literal to formula -> ("+x+","+y+")");
+
+                    clause.insertFirst(linealIndex);
+                    solver.addClause(clause);
+                }
+            }
+        }
     }
 
     private void getSensorClauses2() throws ContradictionException {
@@ -508,6 +515,7 @@ public class TreasureFinder  {
     public void  performInferenceQuestions() throws  IOException,
             ContradictionException, TimeoutException
     {
+        int posibles=0, tx=0, ty=0;
         futureToPast = new ArrayList<>();
     	for (int x = 1; x <= WorldDim; x++) {
     		for (int y = 1; y <= WorldDim; y++) {
@@ -523,9 +531,14 @@ public class TreasureFinder  {
     			}else{
                     System.out.println("Tal vez en : " + variablePositive + " podria estar el tesoro. -> ("+x+","+y+")");
                     tfstate.set(y,x,"¿");
+                    posibles++; tx=x; ty=y;
                 }
     		}
-    	}
+        }
+        if(posibles==1){
+            System.out.println(" YA ESTA!!! EL TESORO SE ENCUENTRA EN: -> ("+tx+","+ty+")");
+            tfstate.set(ty,tx, "O");
+        }
     }    
 
     /**
