@@ -319,6 +319,11 @@ public class TreasureFinder  {
       System.out.println("Metal sensor returned: " + reading);
       System.out.println("Inserting evidence clause");
       switch (reading) {
+
+        case "0":
+          getSensorClauses0();
+          break;
+
         case "1":
           getSensorClauses1();
           break;
@@ -331,15 +336,26 @@ public class TreasureFinder  {
           getSensorClauses3();
           break;
 
-        case "0":
-          break;
-
         default:
           System.out.println("FINDER => Error with metal sensor reading");
           break;
       }
     }
 
+    private void getSensorClauses0() throws ContradictionException{
+        for (int x=1; x<=WorldDim; x++){
+            for (int y=1; y<=WorldDim; y++){
+                VecInt clause = new VecInt();
+                if (x<agentX+3 && y<agentY+3){
+                  int linealIndex = -(coordToLineal(x, y, TreasureFutureOffset));
+                  System.out.println("Adding: " + linealIndex + " literal to formula -> ("+x+","+y+")");
+
+                  clause.insertFirst(linealIndex);
+                  solver.addClause(clause);
+                }
+            }
+        }
+    }
 
     private void getSensorClauses1() throws ContradictionException{
         for (int x=1; x<=WorldDim; x++){
@@ -446,7 +462,7 @@ public class TreasureFinder  {
             addLine(i);
         }
     }
-   
+
     private void addLine(int i) throws ContradictionException {
         for (int x=0; x<WorldDim;x++){
             VecInt clause = new VecInt();
@@ -523,7 +539,7 @@ public class TreasureFinder  {
                 int linealIndex = coordToLineal(x, y, TreasureFutureOffset);
                 VecInt variablePositive = new VecInt();
                 variablePositive.insertFirst(linealIndex);
-                
+
                 // Check if Gamma + variablePositive is unsatisfiable:
     			if (!(solver.isSatisfiable(variablePositive))) {
                     System.out.println("Sabemos que en : " + variablePositive + " seguro que no esta el tesoro. -> ("+x+","+y+")");
@@ -539,7 +555,7 @@ public class TreasureFinder  {
             System.out.println(" YA ESTA!!! EL TESORO SE ENCUENTRA EN: -> ("+tx+","+ty+")");
             tfstate.set(ty,tx, "O");
         }
-    }    
+    }
 
     /**
     * This function builds the initial logical formula of the agent and stores it
