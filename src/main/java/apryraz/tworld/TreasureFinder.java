@@ -307,7 +307,7 @@ public class TreasureFinder  {
 
         getDetectorSensorClauses(x, y, detects);
 
-        //inference()
+        performInferenceQuestions();
         tfstate.printState();
     }
 
@@ -347,25 +347,27 @@ public class TreasureFinder  {
 
     private void getSensorClauses1() throws ContradictionException{
         VecInt clause = new VecInt();
-        clause.insertFirst(coordToLineal(agentX, agentY, TreasureFutureOffset));// VARIABLE PARA INDICAR EL TESORO ??.
+        int linealIndex = coordToLineal(agentX, agentY, TreasureFutureOffset);
+        System.out.println("Adding: +" + linealIndex + " literal to formula -> ("+agentX+","+agentY+")");
+
+        clause.insertFirst(linealIndex);
         solver.addClause(clause);
     }
 
     private void getSensorClauses2() throws ContradictionException {
         VecInt clause = new VecInt();
-        for (int x=0; x<WorldDim; x++){
-            for (int y=0; y<WorldDim; y++){
-                if (   (x==agentX+1 && y==agentY  )
-                    || (x==agentX   && y==agentY+1)
-                    || (x==agentX+1 && y==agentY+1)
-                    || (x==agentX-1 && y==agentY+1)
-                    || (x==agentX-1 && y==agentY  )
-                    || (x==agentX-1 && y==agentY-1)
-                    || (x==agentX   && y==agentY-1)
-                    || (x==agentX+1 && y==agentY-1)){
-                    // Es el marco.
+        for (int x=1; x<=WorldDim; x++){
+            for (int y=1; y<=WorldDim; y++){
+                if (  (x==agentX-1 && y==agentY+1) || (x==agentX && y==agentY+1) || (x==agentX+1 && y==agentY+1) ||
+                      (x==agentX-1 && y==agentY  )                               || (x==agentX+1 && y==agentY  ) ||
+                      (x==agentX-1 && y==agentY-1) || (x==agentX && y==agentY-1) || (x==agentX+1 && y==agentY-1)
+                    ){
+
                 }else{
-                    clause.insertFirst(-coordToLineal(x, y, TreasureFutureOffset));
+                    int linealIndex = -coordToLineal(x, y, TreasureFutureOffset);
+                    System.out.println("Adding: +" + linealIndex + " literal to formula -> ("+x+","+y+")");
+
+                    clause.insertFirst(linealIndex);
                     solver.addClause(clause);
                 }
             }
@@ -374,27 +376,22 @@ public class TreasureFinder  {
 
     private void getSensorClauses3() throws ContradictionException {
         VecInt clause = new VecInt();
-        for (int x=0; x<WorldDim; x++){
-            for (int y=0; y<WorldDim; y++){
-                if (   (x==agentX   && y==agentY+2)
-                    || (x==agentX+1 && y==agentY+2)
-                    || (x==agentX+2 && y==agentY+2)
-                    || (x==agentX+2 && y==agentY+1)
-                    || (x==agentX+2 && y==agentY  )
-                    || (x==agentX+2 && y==agentY-1)
-                    || (x==agentX+2 && y==agentY-2)
-                    || (x==agentX+1 && y==agentY-2)
-                    || (x==agentX   && y==agentY-2)
-                    || (x==agentX-1 && y==agentY-2)
-                    || (x==agentX-2 && y==agentY-2)
-                    || (x==agentX-2 && y==agentY-1)
-                    || (x==agentX-2 && y==agentY  )
-                    || (x==agentX-2 && y==agentY+1)
-                    || (x==agentX-2 && y==agentY+2)
-                    || (x==agentX-1 && y==agentY+2)){
-                    // Es el marco.
+        for (int x=1; x<=WorldDim; x++){
+            for (int y=1; y<=WorldDim; y++){
+                if (  (x==agentX-2 && y==agentY+2) || (x==agentX-1 && y==agentY+2) || (x==agentX && y==agentY+2) || (x==agentX+1 && y==agentY+2) || (x==agentX+2 && y==agentY+2) ||
+                      (x==agentX-2 && y==agentY+1)                                                                                               || (x==agentX+2 && y==agentY+1) ||
+                      (x==agentX-2 && y==agentY  )                                                                                               || (x==agentX+2 && y==agentY  ) ||
+                      (x==agentX-2 && y==agentY-1)                                                                                               || (x==agentX+2 && y==agentY-1) ||
+                      (x==agentX-2 && y==agentY-2) || (x==agentX-1 && y==agentY-2) || (x==agentX && y==agentY-2) || (x==agentX+1 && y==agentY-2) || (x==agentX+2 && y==agentY-2)
+                    ){
+                    //System.out.println("Dentro del rango 3: "+x+","+y);
+
                 }else{
-                    clause.insertFirst(-coordToLineal(x, y, TreasureFutureOffset));
+                    //System.out.println("Fuera del rango 3: "+x+","+y);
+                    int linealIndex = -coordToLineal(x, y, TreasureFutureOffset);
+                    System.out.println("Adding: +" + linealIndex + " literal to formula -> ("+x+","+y+")");
+
+                    clause.insertFirst(linealIndex);
                     solver.addClause(clause);
                 }
             }
@@ -469,27 +466,6 @@ public class TreasureFinder  {
     public void  performInferenceQuestions() throws  IOException,
             ContradictionException, TimeoutException
     {
-      /**
-       // EXAMPLE code to check this for position (2,3):
-       // Get variable number for position 2,3 in past variables
-        int linealIndex = coordToLineal(2, 3, TreasureFutureOffset);
-       // Get the same variable, but in the past subset
-        int linealIndexPast = coordToLineal(2, 3, TreasurePastOffset);
-
-        VecInt variablePositive = new VecInt();
-        variablePositive.insertFirst(linealIndex);
-
-        // Check if Gamma + variablePositive is unsatisfiable:
-        // This is only AN EXAMPLE for a specific position: (2,3)
-        if (!(solver.isSatisfiable(variablePositive))) {
-              // Add conclusion to list, but rewritten with respect to "past" variables
-              VecInt concPast = new VecInt();
-              concPast.insertFirst(-(linealIndexPast));
-
-              futureToPast.add(concPast);
-              tfstate.set( 2 , 3 , "X" );
-        }
-        **/
         futureToPast = new ArrayList<>();
     		for (int i = 1; i <= WorldDim; i++) {
     			for (int j = 1; j <= WorldDim; j++) {
