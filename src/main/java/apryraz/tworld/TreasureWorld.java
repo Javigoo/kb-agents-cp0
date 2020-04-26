@@ -65,13 +65,13 @@ public static void main ( String[] args) throws ParseFormatException,
 
   // Here I run a concrete example, but you should read parameters from
   // the command line, as decribed above.
-  if (args != null && args.length > 4) {
+  if (args != null && args.length > 5) {
 			int WorldDim = Integer.parseInt(args[0]);
 			int TreasureX = Integer.parseInt(args[1]);
 			int TreasureY = Integer.parseInt(args[2]);
 			int numSteps = Integer.parseInt(args[3]);
 			String stepsFile = args[4];
-      String piratesFile = args[4];
+      String piratesFile = args[5];
 			runStepsSequence(WorldDim, TreasureX, TreasureY, numSteps, stepsFile, piratesFile);
 		} else {
 			System.out.println("Error: Not enough arguments given");
