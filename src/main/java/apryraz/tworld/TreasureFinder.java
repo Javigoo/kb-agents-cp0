@@ -458,7 +458,7 @@ public class TreasureFinder  {
     }
 
     private void getPirateClausesDown(int y, String isup) throws ContradictionException {
-        for (int i=y; i<WorldDim; i++){
+        for (int i=y+1; i<=WorldDim; i++){
             addLine(i);
         }
     }
@@ -521,7 +521,7 @@ public class TreasureFinder  {
                     tfstate.set(y,x,"?");
                     posibles++; tx=x; ty=y;
                 }
-    		    }
+    		}
         }
         if(posibles==1){
             System.out.println("Treasure: -> ("+tx+","+ty+")");
