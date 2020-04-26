@@ -346,7 +346,8 @@ public class TreasureFinder  {
         for (int x=1; x<=WorldDim; x++){
             for (int y=1; y<=WorldDim; y++){
                 VecInt clause = new VecInt();
-                if (x<=agentX+2 && y<=agentY+2){
+                if (x<=agentX+2 && y<=agentY+2
+                    && x>=agentX-2 && y>=agentY-2){
                   int linealIndex = -(coordToLineal(x, y, TreasureFutureOffset));
                   //System.out.println("Adding: " + linealIndex + " literal to formula -> ("+x+","+y+")");
 
