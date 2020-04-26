@@ -304,11 +304,7 @@ public class TreasureFinder  {
         // to Gamma to then be able to infer new NOT possible positions
 
         // CALL your functions HERE
-
         getDetectorSensorClauses(x, y, detects);
-
-        performInferenceQuestions();
-        tfstate.printState();
     }
 
     /**
@@ -347,6 +343,7 @@ public class TreasureFinder  {
 
     private void getSensorClauses1() throws ContradictionException{
         VecInt clause = new VecInt();
+        // Deberiamos descartar el resto de posiciones.
         int linealIndex = coordToLineal(agentX, agentY, TreasureFutureOffset);
         System.out.println("Adding: +" + linealIndex + " literal to formula -> ("+agentX+","+agentY+")");
 
@@ -364,7 +361,7 @@ public class TreasureFinder  {
                     ){
 
                 }else{
-                    int linealIndex = -coordToLineal(x, y, TreasureFutureOffset);
+                    int linealIndex = -(coordToLineal(x, y, TreasureFutureOffset));
                     System.out.println("Adding: +" + linealIndex + " literal to formula -> ("+x+","+y+")");
 
                     clause.insertFirst(linealIndex);
@@ -388,7 +385,7 @@ public class TreasureFinder  {
 
                 }else{
                     //System.out.println("Fuera del rango 3: "+x+","+y);
-                    int linealIndex = -coordToLineal(x, y, TreasureFutureOffset);
+                    int linealIndex = -(coordToLineal(x, y, TreasureFutureOffset));
                     System.out.println("Adding: +" + linealIndex + " literal to formula -> ("+x+","+y+")");
 
                     clause.insertFirst(linealIndex);
@@ -503,7 +500,7 @@ public class TreasureFinder  {
 
         // You must set this variable to the total number of boolean variables
         // in your formula Gamma
-        totalNumVariables=6;
+        totalNumVariables = 2*WorldLinealDim + 6*WorldLinealDim;
         solver = SolverFactory.newDefault();
         solver.setTimeout(3600);
         solver.newVar(totalNumVariables);
@@ -511,12 +508,49 @@ public class TreasureFinder  {
         // the variable indentifiers of all the variables
         actualLiteral = 1;
 
-        // call here functions to add the differen sets of clauses
+        // call here functions to add the different sets of clauses
         // of Gamma to the solver object
+        pastTreasure(); // Barcenas t-1, from 1,1 to n,n (1 clause)
+		    futureTreasure(); // Barcenas t+1, from 1,1 to n,n (1 clause)
+		    //pastBarcenasToFutureBarcenas(); // Barcenas t-1 -> Barcenas t+1 (nxn clauses)
+		    // smellsImplications(   ); // Smells implications (nxnxnxn clauses)
+		    //soundImplications(); // Sound sensor implications (nxnxnxn clauses)
+        //notInFirstPosition(); // Not in the 1,1 clauses (2 clauses)
 
         return solver;
     }
 
+    /**
+	 * Adds the clause that says that the treasure must be in some position
+	 * with respect to the variables that talk about past positions.
+	 *
+	 * @throws ContradictionException if inserting contradictory clauses in formula (solver).
+	 **/
+  	private void pastTreasure() throws ContradictionException {
+  		TreasurePastOffset = actualLiteral;
+  		VecInt pastClause = new VecInt();
+  		for (int i = 0; i < WorldLinealDim; i++) {
+  			pastClause.insertFirst(actualLiteral);
+  			actualLiteral++;
+  		}
+  		solver.addClause(pastClause);
+  	}
+
+    /**
+  	 * Adds the clause that says that the treasure must be in some position
+  	 * with respect to the variables that talk about past positions.
+  	 *
+  	 * @throws ContradictionException if inserting contradictory clauses in formula (solver).
+  	 **/
+    	private void futureTreasure() throws ContradictionException {
+    		TreasureFutureOffset = actualLiteral;
+    		VecInt futureClause = new VecInt();
+    		for (int i = 0; i < WorldLinealDim; i++) {
+    			futureClause.insertFirst(actualLiteral);
+    			actualLiteral++;
+    		}
+    		solver.addClause(futureClause);
+    	}
 
      /**
      * Convert a coordinate pair (x,y) to the integer value  t_[x,y]
