@@ -412,23 +412,43 @@ public class TreasureFinder  {
     }
 
 
-    public void processPirateAnswer( AMessage ans )   throws
+    public void processPirateAnswer(AMessage ans) throws
             IOException, ContradictionException,  TimeoutException
     {
         int y = Integer.parseInt(ans.getComp(2));
         String isup = ans.getComp(0);
-        System.out.println("\nProcessPirateAnswer\n");
         // isup should be either "yes" (is up of agent position), or "no"
-
         // Call your function/functions to add the evidence clauses
         // to Gamma to then be able to infer new NOT possible positions
-
-        //clauses = getPirateClauses( y, isup);
-
-        // CALL your functions HERE to update the solver object with more
-        // clauses
-        //solver.addAllClauses(clauses);
+        if (isup=="yes"){
+            getPirateClausesUp( y, isup);
+        }
+        else{
+            getPirateClausesDown( y, isup);
+        }
    }
+
+    private void getPirateClausesUp(int y, String isup) throws ContradictionException {
+        for (int i=1; i<y; i++){
+            addLine(i);
+        }
+    }
+
+    private void getPirateClausesDown(int y, String isup) throws ContradictionException {
+        for (int i=y; i<WorldDim; i++){
+            addLine(i);
+        }
+    }
+   
+    private void addLine(int i) throws ContradictionException {
+    VecInt clause = new VecInt();
+        for (int x=0; x<WorldDim;x++){
+            int linealIndex = -(coordToLineal(x, i, TreasureFutureOffset));
+            System.out.println("Adding: " + linealIndex + " literal to formula -> ("+x+","+i+")");
+            clause.insertFirst(linealIndex);
+            solver.addClause(clause);
+        }
+    }
 
 
     /**
