@@ -185,7 +185,7 @@ public class TreasureFinder  {
           pirateFound = 0;
           // Add the conclusions obtained in the previous step
           // but as clauses that use the "past" variables
-          addLastFutureClausesToPastClauses();
+          //addLastFutureClausesToPastClauses();
 
           // Ask to move, and check whether it was successful
           // Also, record if a pirate was found at that position
@@ -349,13 +349,12 @@ public class TreasureFinder  {
 
         clause.insertFirst(linealIndex);
         solver.addClause(clause);
-        tfstate.set(agentY, agentX, "O");
     }
 
     private void getSensorClauses2() throws ContradictionException {
-        VecInt clause = new VecInt();
         for (int x=1; x<=WorldDim; x++){
             for (int y=1; y<=WorldDim; y++){
+                VecInt clause = new VecInt();
                 if (  (x==agentX-1 && y==agentY+1) || (x==agentX && y==agentY+1) || (x==agentX+1 && y==agentY+1) ||
                       (x==agentX-1 && y==agentY  )                               || (x==agentX+1 && y==agentY  ) ||
                       (x==agentX-1 && y==agentY-1) || (x==agentX && y==agentY-1) || (x==agentX+1 && y==agentY-1)
@@ -367,16 +366,15 @@ public class TreasureFinder  {
 
                     clause.insertFirst(linealIndex);
                     solver.addClause(clause);
-                    tfstate.set(y, x, "X");
                 }
             }
         }
     }
 
     private void getSensorClauses3() throws ContradictionException {
-        VecInt clause = new VecInt();
         for (int x=1; x<=WorldDim; x++){
             for (int y=1; y<=WorldDim; y++){
+                VecInt clause = new VecInt();
                 if (  (x==agentX-2 && y==agentY+2) || (x==agentX-1 && y==agentY+2) || (x==agentX && y==agentY+2) || (x==agentX+1 && y==agentY+2) || (x==agentX+2 && y==agentY+2) ||
                       (x==agentX-2 && y==agentY+1)                                                                                               || (x==agentX+2 && y==agentY+1) ||
                       (x==agentX-2 && y==agentY  )                                                                                               || (x==agentX+2 && y==agentY  ) ||
@@ -391,7 +389,6 @@ public class TreasureFinder  {
 
                     clause.insertFirst(linealIndex);
                     solver.addClause(clause);
-                    tfstate.set(y, x, "X");
                 }
             }
         }
@@ -444,13 +441,12 @@ public class TreasureFinder  {
     }
    
     private void addLine(int i) throws ContradictionException {
-    VecInt clause = new VecInt();
         for (int x=0; x<WorldDim;x++){
+            VecInt clause = new VecInt();
             int linealIndex = -(coordToLineal(x, i, TreasureFutureOffset));
             System.out.println("Adding: " + linealIndex + " literal to formula -> ("+x+","+i+")");
             clause.insertFirst(linealIndex);
             solver.addClause(clause);
-            tfstate.set(i,x,"X");
         }
     }
 
@@ -483,7 +479,7 @@ public class TreasureFinder  {
     * conclusions that were already added in previous steps, although this will not produce
     * any bad functioning in the reasoning process with the formula.
     **/
-    public void  performInferenceQuestions() throws  IOException,
+    /*public void  performInferenceQuestions() throws  IOException,
             ContradictionException, TimeoutException
     {
         futureToPast = new ArrayList<>();
@@ -508,7 +504,29 @@ public class TreasureFinder  {
     				}
     			}
     		}
-    }
+    }*/
+    public void  performInferenceQuestions() throws  IOException,
+            ContradictionException, TimeoutException
+    {
+        futureToPast = new ArrayList<>();
+    	for (int x = 1; x <= WorldDim; x++) {
+    		for (int y = 1; y <= WorldDim; y++) {
+                // Get variable number for position i,j in past variables
+                int linealIndex = coordToLineal(x, y, TreasureFutureOffset);
+                VecInt variablePositive = new VecInt();
+                variablePositive.insertFirst(linealIndex);
+                
+                // Check if Gamma + variablePositive is unsatisfiable:
+    			if (!(solver.isSatisfiable(variablePositive))) {
+                    System.out.println("Sabemos que en : " + variablePositive + " seguro que no esta el tesoro. -> ("+x+","+y+")");
+    				tfstate.set(y,x, "X");
+    			}else{
+                    System.out.println("Tal vez en : " + variablePositive + " podria estar el tesoro. -> ("+x+","+y+")");
+                    tfstate.set(y,x,"¿");
+                }
+    		}
+    	}
+    }    
 
     /**
     * This function builds the initial logical formula of the agent and stores it
