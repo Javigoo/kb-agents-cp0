@@ -349,6 +349,7 @@ public class TreasureFinder  {
 
         clause.insertFirst(linealIndex);
         solver.addClause(clause);
+        tfstate.set(agentY, agentX, "O");
     }
 
     private void getSensorClauses2() throws ContradictionException {
@@ -366,6 +367,7 @@ public class TreasureFinder  {
 
                     clause.insertFirst(linealIndex);
                     solver.addClause(clause);
+                    tfstate.set(y, x, "X");
                 }
             }
         }
@@ -389,6 +391,7 @@ public class TreasureFinder  {
 
                     clause.insertFirst(linealIndex);
                     solver.addClause(clause);
+                    tfstate.set(y, x, "X");
                 }
             }
         }
@@ -447,6 +450,7 @@ public class TreasureFinder  {
             System.out.println("Adding: " + linealIndex + " literal to formula -> ("+x+","+i+")");
             clause.insertFirst(linealIndex);
             solver.addClause(clause);
+            tfstate.set(i,x,"X");
         }
     }
 
@@ -483,12 +487,12 @@ public class TreasureFinder  {
             ContradictionException, TimeoutException
     {
         futureToPast = new ArrayList<>();
-    		for (int i = 1; i <= WorldDim; i++) {
-    			for (int j = 1; j <= WorldDim; j++) {
+    		for (int x = 1; x <= WorldDim; x++) {
+    			for (int y = 1; y <= WorldDim; y++) {
     				// Get variable number for position i,j in past variables
-    				int linealIndex = coordToLineal(i, j, TreasureFutureOffset);
+    				int linealIndex = coordToLineal(x, y, TreasureFutureOffset);
     				// Get the same variable, but in the past subset
-    				int linealIndexPast = coordToLineal(i, j, TreasurePastOffset);
+    				int linealIndexPast = coordToLineal(x, y, TreasurePastOffset);
 
     				VecInt variablePositive = new VecInt();
     				variablePositive.insertFirst(linealIndex);
@@ -500,7 +504,7 @@ public class TreasureFinder  {
     					concPast.insertFirst(-(linealIndexPast));
 
     					futureToPast.add(concPast);
-    					tfstate.set(i, j, "X");
+    					//tfstate.set(x, y, "X");
     				}
     			}
     		}
