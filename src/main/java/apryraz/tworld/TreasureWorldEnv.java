@@ -79,7 +79,6 @@ public class TreasureWorldEnv {
         String[] coords = piratesList[i].split(",");
         listOfPirates.add(new Position(Integer.parseInt(coords[0]), Integer.parseInt(coords[1])));
     }
-
   }
 
 
@@ -184,7 +183,7 @@ public class TreasureWorldEnv {
   **/
    public int isPirateInMyCell( int x, int y ) {
      for (int i = 0 ; i < listOfPirates.size() ; i++ ) {
-       if (x == listOfPirates.get(0).x && y == listOfPirates.get(0).y) {
+       if (x == listOfPirates.get(i).x && y == listOfPirates.get(i).y) {
          return 1;
        }
      }

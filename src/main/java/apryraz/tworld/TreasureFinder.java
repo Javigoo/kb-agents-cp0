@@ -346,7 +346,7 @@ public class TreasureFinder  {
         for (int x=1; x<=WorldDim; x++){
             for (int y=1; y<=WorldDim; y++){
                 VecInt clause = new VecInt();
-                if (x<agentX+3 && y<agentY+3){
+                if (x<=agentX+2 && y<=agentY+2){
                   int linealIndex = -(coordToLineal(x, y, TreasureFutureOffset));
                   //System.out.println("Adding: " + linealIndex + " literal to formula -> ("+x+","+y+")");
 
@@ -404,7 +404,7 @@ public class TreasureFinder  {
                       (x==agentX-2 && y==agentY-1)                                                                                               || (x==agentX+2 && y==agentY-1) ||
                       (x==agentX-2 && y==agentY-2) || (x==agentX-1 && y==agentY-2) || (x==agentX && y==agentY-2) || (x==agentX+1 && y==agentY-2) || (x==agentX+2 && y==agentY-2)
                     ){
-                    //System.out.println("Dentro del rango 3: "+x+","+y);
+                    System.out.println("Dentro del rango 3: "+x+","+y);
                 }else{
                     //System.out.println("Fuera del rango 3: "+x+","+y);
                     int linealIndex = -(coordToLineal(x, y, TreasureFutureOffset));
