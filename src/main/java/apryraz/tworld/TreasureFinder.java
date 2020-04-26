@@ -335,7 +335,7 @@ public class TreasureFinder  {
           break;
 
         default:
-          System.out.println("FINDER => Error with metal sensor reading");
+          System.out.println("Error: Incorrect metal sensor reading");
           break;
       }
     }
