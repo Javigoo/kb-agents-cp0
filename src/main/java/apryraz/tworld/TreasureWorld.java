@@ -78,4 +78,5 @@ public static void main ( String[] args) throws ParseFormatException,
 			System.out.println("Error: Not enough arguments given");
 	}
 
+  }
 }
