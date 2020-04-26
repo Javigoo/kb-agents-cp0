@@ -157,4 +157,21 @@ public class TreasureFinderTest {
     testMakeSeqOfSteps(4, 3, 3, 5, "tests/steps1.txt", "tests/states1.txt", "tests/pirates1.txt");
   }
 
+  @Test
+  public void TWorldTest2()   throws
+          IOException,  ContradictionException, TimeoutException {
+    testMakeSeqOfSteps(6, 4, 4, 5, "tests/steps2.txt", "tests/states2.txt", "tests/pirates2.txt");
+  }
+
+  @Test
+  public void TWorldTest3()   throws
+          IOException,  ContradictionException, TimeoutException {
+    testMakeSeqOfSteps(7, 5, 4, 7, "tests/steps3.txt", "tests/states3.txt", "tests/pirates3.txt");
+  }
+
+  @Test
+  public void TWorldTest4()   throws
+          IOException,  ContradictionException, TimeoutException {
+    testMakeSeqOfSteps(8, 3, 7, 6, "tests/steps4.txt", "tests/states4.txt", "tests/pirates4.txt");
+  }
 }
