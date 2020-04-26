@@ -512,8 +512,7 @@ public class TreasureFinder  {
         pastTreasure(); // Barcenas t-1, from 1,1 to n,n (1 clause)
 		    futureTreasure(); // Barcenas t+1, from 1,1 to n,n (1 clause)
 		    pastTreasureToFutureTreasure(); // Barcenas t-1 -> Barcenas t+1 (nxn clauses)
-		    // smellsImplications(   ); // Smells implications (nxnxnxn clauses)
-		    //soundImplications(); // Sound sensor implications (nxnxnxn clauses)
+		    sensor_implications(); // Sensor implications (nxnxnxn clauses)
         //notInFirstPosition(); // Not in the 1,1 clauses (2 clauses)
 
         return solver;
@@ -566,6 +565,44 @@ public class TreasureFinder  {
     			solver.addClause(clause);
     		}
     	}
+
+      /**
+    	* Adds the clauses related to implications between metal sensor evidence and
+    	* not possible positions of Treasure.
+    	*
+    	* @throws ContradictionException if inserting contradictory clauses in formula (solver).
+    	**/
+      public void sensor_implications() throws ContradictionException {
+        DetectorOffset = actualLiteral;
+        for (int k = 0; k < WorldLinealDim; k++) {
+            int s_x = linealToCoord(actualLiteral, DetectorOffset)[0];
+            int s_y = linealToCoord(actualLiteral, DetectorOffset)[1];
+            for (int b_x = 1; b_x < WorldDim + 1; b_x++) {
+                for (int b_y = 1; b_y < WorldDim + 1; b_y++) {
+                    // If smells
+                    if ((b_x == s_x && b_y == s_y)
+                            || (b_x + 1 == s_x && b_y == s_y)
+                            || (b_x - 1 == s_x && b_y == s_y)
+                            || (b_y + 1 == s_y && b_x == s_x)
+                            || (b_y - 1 == s_y && b_x == s_x)) {
+                        VecInt clause = new VecInt();
+                        clause.insertFirst(actualLiteral);
+                        clause.insertFirst(-coordToLineal(b_x, b_y, TreasureFutureOffset));
+                        solver.addClause(clause);
+                    } else {
+                        VecInt clause = new VecInt();
+                        clause.insertFirst(-actualLiteral);
+                        clause.insertFirst(-coordToLineal(b_x, b_y, TreasureFutureOffset));
+                        solver.addClause(clause);
+                    }
+                }
+            }
+            actualLiteral++;
+        }
+      }
+
+
+
      /**
      * Convert a coordinate pair (x,y) to the integer value  t_[x,y]
      * of variable that stores that information in the formula, using
