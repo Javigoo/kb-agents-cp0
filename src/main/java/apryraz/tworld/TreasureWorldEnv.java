@@ -54,8 +54,7 @@ public class TreasureWorldEnv {
   /**
   *   Load the list of pirates locations
   *
-  *    @param: name of the file that should contain a
-  *            set of pirate locations in a single line.
+  *    @param piratesFile
   **/
   public void loadPiratesLocations( String piratesFile ) {
     String[] piratesList;
