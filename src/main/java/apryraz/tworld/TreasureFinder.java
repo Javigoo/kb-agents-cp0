@@ -348,7 +348,7 @@ public class TreasureFinder  {
                 VecInt clause = new VecInt();
                 if (x<agentX+3 && y<agentY+3){
                   int linealIndex = -(coordToLineal(x, y, TreasureFutureOffset));
-                  System.out.println("Adding: " + linealIndex + " literal to formula -> ("+x+","+y+")");
+                  //System.out.println("Adding: " + linealIndex + " literal to formula -> ("+x+","+y+")");
 
                   clause.insertFirst(linealIndex);
                   solver.addClause(clause);
@@ -365,7 +365,7 @@ public class TreasureFinder  {
 
                 }else{
                     int linealIndex = -(coordToLineal(x, y, TreasureFutureOffset));
-                    System.out.println("Adding: " + linealIndex + " literal to formula -> ("+x+","+y+")");
+                    //System.out.println("Adding: " + linealIndex + " literal to formula -> ("+x+","+y+")");
 
                     clause.insertFirst(linealIndex);
                     solver.addClause(clause);
@@ -385,7 +385,7 @@ public class TreasureFinder  {
 
                 }else{
                     int linealIndex = -(coordToLineal(x, y, TreasureFutureOffset));
-                    System.out.println("Adding: " + linealIndex + " literal to formula -> ("+x+","+y+")");
+                    //System.out.println("Adding: " + linealIndex + " literal to formula -> ("+x+","+y+")");
 
                     clause.insertFirst(linealIndex);
                     solver.addClause(clause);
@@ -408,7 +408,7 @@ public class TreasureFinder  {
                 }else{
                     //System.out.println("Fuera del rango 3: "+x+","+y);
                     int linealIndex = -(coordToLineal(x, y, TreasureFutureOffset));
-                    System.out.println("Adding: " + linealIndex + " literal to formula -> ("+x+","+y+")");
+                    //System.out.println("Adding: " + linealIndex + " literal to formula -> ("+x+","+y+")");
 
                     clause.insertFirst(linealIndex);
                     solver.addClause(clause);
@@ -452,7 +452,7 @@ public class TreasureFinder  {
    }
 
     private void getPirateClausesUp(int y, String isup) throws ContradictionException {
-        for (int i=1; i<y; i++){
+        for (int i=1; i<=y; i++){
             addLine(i);
         }
     }
@@ -467,7 +467,7 @@ public class TreasureFinder  {
         for (int x=0; x<WorldDim;x++){
             VecInt clause = new VecInt();
             int linealIndex = -(coordToLineal(x, i, TreasureFutureOffset));
-            System.out.println("Adding: " + linealIndex + " literal to formula -> ("+x+","+i+")");
+            //System.out.println("Adding: " + linealIndex + " literal to formula -> ("+x+","+i+")");
             clause.insertFirst(linealIndex);
             solver.addClause(clause);
         }
@@ -502,57 +502,28 @@ public class TreasureFinder  {
     * conclusions that were already added in previous steps, although this will not produce
     * any bad functioning in the reasoning process with the formula.
     **/
-    /*public void  performInferenceQuestions() throws  IOException,
-            ContradictionException, TimeoutException
-    {
-        futureToPast = new ArrayList<>();
-    		for (int x = 1; x <= WorldDim; x++) {
-    			for (int y = 1; y <= WorldDim; y++) {
-    				// Get variable number for position i,j in past variables
-    				int linealIndex = coordToLineal(x, y, TreasureFutureOffset);
-    				// Get the same variable, but in the past subset
-    				int linealIndexPast = coordToLineal(x, y, TreasurePastOffset);
-
-    				VecInt variablePositive = new VecInt();
-    				variablePositive.insertFirst(linealIndex);
-
-    				// Check if Gamma + variablePositive is unsatisfiable:
-    				if (!(solver.isSatisfiable(variablePositive))) {
-    					// Add conclusion to list, but rewritten with respect to "past" variables
-    					VecInt concPast = new VecInt();
-    					concPast.insertFirst(-(linealIndexPast));
-
-    					futureToPast.add(concPast);
-    					//tfstate.set(x, y, "X");
-    				}
-    			}
-    		}
-    }*/
     public void  performInferenceQuestions() throws  IOException,
             ContradictionException, TimeoutException
     {
         int posibles=0, tx=0, ty=0;
         futureToPast = new ArrayList<>();
-    	for (int x = 1; x <= WorldDim; x++) {
-    		for (int y = 1; y <= WorldDim; y++) {
+    	  for (int x = 1; x <= WorldDim; x++) {
+    		    for (int y = 1; y <= WorldDim; y++) {
                 // Get variable number for position i,j in past variables
                 int linealIndex = coordToLineal(x, y, TreasureFutureOffset);
                 VecInt variablePositive = new VecInt();
                 variablePositive.insertFirst(linealIndex);
 
                 // Check if Gamma + variablePositive is unsatisfiable:
-    			if (!(solver.isSatisfiable(variablePositive))) {
-                    System.out.println("Sabemos que en : " + variablePositive + " seguro que no esta el tesoro. -> ("+x+","+y+")");
-    				tfstate.set(y,x, "X");
-    			}else{
-                    System.out.println("Tal vez en : " + variablePositive + " podria estar el tesoro. -> ("+x+","+y+")");
-                    tfstate.set(y,x,"¿");
+          			if (!(solver.isSatisfiable(variablePositive))) {
+          				  tfstate.set(y,x, "X");
+          			}else{
+                    tfstate.set(y,x,"?");
                     posibles++; tx=x; ty=y;
                 }
-    		}
+    		    }
         }
         if(posibles==1){
-            System.out.println(" YA ESTA!!! EL TESORO SE ENCUENTRA EN: -> ("+tx+","+ty+")");
             tfstate.set(ty,tx, "O");
         }
     }
