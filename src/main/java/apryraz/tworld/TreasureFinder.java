@@ -342,33 +342,37 @@ public class TreasureFinder  {
       }
     }
 
+    /**
+    * Add denied clauses that are within the range of readings 1, 2 and 3
+    *
+    * @throws ContradictionException if inserting contradictory clauses in formula.
+    **/
     private void getSensorClauses0() throws ContradictionException{
         for (int x=1; x<=WorldDim; x++){
             for (int y=1; y<=WorldDim; y++){
                 VecInt clause = new VecInt();
                 if (agentX-2<=x && x<=agentX+2 && agentY-2<=y && y<=agentY+2){
                   int linealIndex = -(coordToLineal(x, y, TreasureFutureOffset));
-
                   clause.insertFirst(linealIndex);
                   solver.addClause(clause);
-                }else{
-                  System.out.println("NO -> ("+x+","+y+")");
-
                 }
             }
         }
     }
 
+    /**
+    * Add denied clauses that are within the range of the readings 1
+    *
+    * @throws ContradictionException if inserting contradictory clauses in formula.
+    **/
     private void getSensorClauses1() throws ContradictionException{
         for (int x=1; x<=WorldDim; x++){
             for (int y=1; y<=WorldDim; y++){
                 VecInt clause = new VecInt();
                 if (x==agentX && y==agentY){
-
+                    // Tiles where the treasure is located
                 }else{
                     int linealIndex = -(coordToLineal(x, y, TreasureFutureOffset));
-                    //System.out.println("Adding: " + linealIndex + " literal to formula -> ("+x+","+y+")");
-
                     clause.insertFirst(linealIndex);
                     solver.addClause(clause);
                 }
@@ -376,6 +380,11 @@ public class TreasureFinder  {
         }
     }
 
+    /**
+    * Add denied clauses that are within the range of the readings 2
+    *
+    * @throws ContradictionException if inserting contradictory clauses in formula.
+    **/
     private void getSensorClauses2() throws ContradictionException {
         for (int x=1; x<=WorldDim; x++){
             for (int y=1; y<=WorldDim; y++){
@@ -384,11 +393,9 @@ public class TreasureFinder  {
                       (x==agentX-1 && y==agentY  )                               || (x==agentX+1 && y==agentY  ) ||
                       (x==agentX-1 && y==agentY-1) || (x==agentX && y==agentY-1) || (x==agentX+1 && y==agentY-1)
                     ){
-
+                    // Tiles where the treasure is located
                 }else{
                     int linealIndex = -(coordToLineal(x, y, TreasureFutureOffset));
-                    //System.out.println("Adding: " + linealIndex + " literal to formula -> ("+x+","+y+")");
-
                     clause.insertFirst(linealIndex);
                     solver.addClause(clause);
                 }
@@ -396,6 +403,11 @@ public class TreasureFinder  {
         }
     }
 
+    /**
+    * Add denied clauses that are within the range of the readings 3
+    *
+    * @throws ContradictionException if inserting contradictory clauses in formula.
+    **/
     private void getSensorClauses3() throws ContradictionException {
         for (int x=1; x<=WorldDim; x++){
             for (int y=1; y<=WorldDim; y++){
@@ -406,12 +418,9 @@ public class TreasureFinder  {
                       (x==agentX-2 && y==agentY-1)                                                                                               || (x==agentX+2 && y==agentY-1) ||
                       (x==agentX-2 && y==agentY-2) || (x==agentX-1 && y==agentY-2) || (x==agentX && y==agentY-2) || (x==agentX+1 && y==agentY-2) || (x==agentX+2 && y==agentY-2)
                     ){
-                    //System.out.println("Dentro del rango 3: "+x+","+y);
+                    // Tiles where the treasure is located
                 }else{
-                    //System.out.println("Fuera del rango 3: "+x+","+y);
                     int linealIndex = -(coordToLineal(x, y, TreasureFutureOffset));
-                    //System.out.println("Adding: " + linealIndex + " literal to formula -> ("+x+","+y+")");
-
                     clause.insertFirst(linealIndex);
                     solver.addClause(clause);
                 }
@@ -437,8 +446,13 @@ public class TreasureFinder  {
     }
 
 
-    public void processPirateAnswer(AMessage ans) throws
-            IOException, ContradictionException,  TimeoutException
+    /**
+    * Call a specific function, depending on the pirate answer, to add the evidence
+    * clauses to Gamma to then be able to infer new NOT possible positions
+    *
+    * @throws ContradictionException if inserting contradictory clauses in formula.
+    **/
+    public void processPirateAnswer(AMessage ans) throws ContradictionException
     {
         int y = Integer.parseInt(ans.getComp(2));
         String isup = ans.getComp(0);
@@ -451,30 +465,44 @@ public class TreasureFinder  {
         else{
             getPirateClausesDown( y, isup);
         }
-   }
+    }
 
+    /**
+    * Add all positions above the agent's current position as clauses
+    *
+    * @throws ContradictionException if inserting contradictory clauses in formula.
+    **/
     private void getPirateClausesUp(int y, String isup) throws ContradictionException {
         for (int i=1; i<=y; i++){
             addLine(i);
         }
     }
 
+    /**
+    * Add all positions below the agent's current position as clauses
+    *
+    * @throws ContradictionException if inserting contradictory clauses in formula.
+    **/
     private void getPirateClausesDown(int y, String isup) throws ContradictionException {
         for (int i=y+1; i<=WorldDim; i++){
             addLine(i);
         }
     }
 
+    /**
+    * Add all the clauses of the row indicated as parameter
+    *
+    * @param i        y coordinate of the row.
+    * @throws ContradictionException if inserting contradictory clauses in formula.
+    **/
     private void addLine(int i) throws ContradictionException {
         for (int x=0; x<WorldDim;x++){
             VecInt clause = new VecInt();
             int linealIndex = -(coordToLineal(x, i, TreasureFutureOffset));
-            //System.out.println("Adding: " + linealIndex + " literal to formula -> ("+x+","+i+")");
             clause.insertFirst(linealIndex);
             solver.addClause(clause);
         }
     }
-
 
     /**
     *  This function should add all the clauses stored in the list
@@ -544,7 +572,7 @@ public class TreasureFinder  {
 
         // You must set this variable to the total number of boolean variables
         // in your formula Gamma
-        totalNumVariables = 2*WorldLinealDim + 6*WorldLinealDim;
+        totalNumVariables = WorldLinealDim;
         solver = SolverFactory.newDefault();
         solver.setTimeout(3600);
         solver.newVar(totalNumVariables);
@@ -554,12 +582,9 @@ public class TreasureFinder  {
 
         // call here functions to add the different sets of clauses
         // of Gamma to the solver object
-        pastTreasure(); // Barcenas t-1, from 1,1 to n,n (1 clause)
-		    futureTreasure(); // Barcenas t+1, from 1,1 to n,n (1 clause)
-		    pastTreasureToFutureTreasure(); // Barcenas t-1 -> Barcenas t+1 (nxn clauses)
-		    // smellsImplications(   ); // Smells implications (nxnxnxn clauses)
-		    //soundImplications(); // Sound sensor implications (nxnxnxn clauses)
-        //notInFirstPosition(); // Not in the 1,1 clauses (2 clauses)
+        pastTreasure(); // Treasure t-1, from 1,1 to n,n (1 clause)
+		    futureTreasure(); // Treasure t+1, from 1,1 to n,n (1 clause)
+		    pastTreasureToFutureTreasure(); // Treasure t-1 -> Treasure t+1 (nxn clauses)
 
         return solver;
     }
@@ -611,6 +636,7 @@ public class TreasureFinder  {
     			solver.addClause(clause);
     		}
     	}
+
      /**
      * Convert a coordinate pair (x,y) to the integer value  t_[x,y]
      * of variable that stores that information in the formula, using
@@ -646,7 +672,5 @@ public class TreasureFinder  {
         coords[0] = (lineal - 1) / WorldDim + 1;
         return coords;
     }
-
-
 
 }

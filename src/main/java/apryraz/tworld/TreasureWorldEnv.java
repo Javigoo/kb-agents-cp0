@@ -169,9 +169,8 @@ public class TreasureWorldEnv {
   private String returnPirateAnswer(int x, int y) {
       if (TreasureY > y) {
   			return "yes";
-  		} else {
-  			return "no";
   		}
+  		return "no";
   }
 
   /**  Check if there is a pirate in position (x,y)
