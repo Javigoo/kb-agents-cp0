@@ -39,15 +39,16 @@ public static void runStepsSequence( int wDim, int tX, int tY,
 
   // Set environment object, and load list of pirate positions
   EnvAgent.loadPiratesLocations(filePirates);   // <----- Tambien se lo podemos pasar en el constructor.
+  TAgent.setEnvironment(EnvAgent);
 
   // load list of steps into the Finder Agent
   TAgent.loadListOfSteps(numSteps, fileSteps);
 
   // Execute sequence of steps with the Agent
-  while (true){
-    TAgent.runNextStep();
-  }
-
+  for (int stepNum = 0; stepNum < numSteps; stepNum++) {
+		TAgent.runNextStep();
+	}
+  
 }
 
 /**

@@ -345,7 +345,7 @@ public class TreasureFinder  {
         VecInt clause = new VecInt();
         // Deberiamos descartar el resto de posiciones.
         int linealIndex = coordToLineal(agentX, agentY, TreasureFutureOffset);
-        System.out.println("Adding: +" + linealIndex + " literal to formula -> ("+agentX+","+agentY+")");
+        System.out.println("Adding: " + linealIndex + " literal to formula -> ("+agentX+","+agentY+")");
 
         clause.insertFirst(linealIndex);
         solver.addClause(clause);
@@ -362,7 +362,7 @@ public class TreasureFinder  {
 
                 }else{
                     int linealIndex = -(coordToLineal(x, y, TreasureFutureOffset));
-                    System.out.println("Adding: +" + linealIndex + " literal to formula -> ("+x+","+y+")");
+                    System.out.println("Adding: " + linealIndex + " literal to formula -> ("+x+","+y+")");
 
                     clause.insertFirst(linealIndex);
                     solver.addClause(clause);
@@ -382,11 +382,10 @@ public class TreasureFinder  {
                       (x==agentX-2 && y==agentY-2) || (x==agentX-1 && y==agentY-2) || (x==agentX && y==agentY-2) || (x==agentX+1 && y==agentY-2) || (x==agentX+2 && y==agentY-2)
                     ){
                     //System.out.println("Dentro del rango 3: "+x+","+y);
-
                 }else{
                     //System.out.println("Fuera del rango 3: "+x+","+y);
                     int linealIndex = -(coordToLineal(x, y, TreasureFutureOffset));
-                    System.out.println("Adding: +" + linealIndex + " literal to formula -> ("+x+","+y+")");
+                    System.out.println("Adding: " + linealIndex + " literal to formula -> ("+x+","+y+")");
 
                     clause.insertFirst(linealIndex);
                     solver.addClause(clause);
@@ -512,7 +511,7 @@ public class TreasureFinder  {
         // of Gamma to the solver object
         pastTreasure(); // Barcenas t-1, from 1,1 to n,n (1 clause)
 		    futureTreasure(); // Barcenas t+1, from 1,1 to n,n (1 clause)
-		    //pastBarcenasToFutureBarcenas(); // Barcenas t-1 -> Barcenas t+1 (nxn clauses)
+		    pastTreasureToFutureTreasure(); // Barcenas t-1 -> Barcenas t+1 (nxn clauses)
 		    // smellsImplications(   ); // Smells implications (nxnxnxn clauses)
 		    //soundImplications(); // Sound sensor implications (nxnxnxn clauses)
         //notInFirstPosition(); // Not in the 1,1 clauses (2 clauses)
@@ -552,6 +551,21 @@ public class TreasureFinder  {
     		solver.addClause(futureClause);
     	}
 
+      /**
+  	 * Adds the clauses that say that if in the past we reached the conclusion
+  	 * that Treasure cannot be in a position (x,y), then this should be also true
+  	 * in the future.
+  	 *
+  	 * @throws ContradictionException if inserting contradictory clauses in formula (solver).
+  	 **/
+    	private void pastTreasureToFutureTreasure() throws ContradictionException {
+    		for (int i = 0; i < WorldLinealDim; i++) {
+    			VecInt clause = new VecInt();
+    			clause.insertFirst(i + 1);
+    			clause.insertFirst(-(i + TreasureFutureOffset));
+    			solver.addClause(clause);
+    		}
+    	}
      /**
      * Convert a coordinate pair (x,y) to the integer value  t_[x,y]
      * of variable that stores that information in the formula, using
